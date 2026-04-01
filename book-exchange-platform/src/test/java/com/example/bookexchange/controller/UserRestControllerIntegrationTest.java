@@ -26,10 +26,9 @@ class UserRestControllerIntegrationTest {
     @Test
     void registerUser_shouldReturnCreated() throws Exception {
         RegisterRequest request = new RegisterRequest();
-        request.setFullName("New Buyer");
-        request.setEmail("newbuyer@example.com");
+        request.setFullName("New User");
+        request.setEmail("newuser@example.com");
         request.setPassword("secret123");
-        request.setRoleName(RoleName.BUYER);
 
         mockMvc.perform(post("/api/users/register")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -45,8 +44,8 @@ class UserRestControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "BUYER")
-    void getUsers_asBuyer_shouldBeForbidden() throws Exception {
+    @WithMockUser(roles = "USER")
+    void getUsers_asUser_shouldBeForbidden() throws Exception {
         mockMvc.perform(get("/api/users"))
             .andExpect(status().isForbidden());
     }

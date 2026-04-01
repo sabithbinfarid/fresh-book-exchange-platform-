@@ -4,6 +4,7 @@ import com.example.bookexchange.service.BookService;
 import com.example.bookexchange.service.OrderService;
 import com.example.bookexchange.service.UserService;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,6 +31,13 @@ public class ViewController {
     @GetMapping("/dashboard")
     public String dashboard(Authentication authentication, Model model) {
         model.addAttribute("name", authentication.getName());
+        
+        // Add user role information
+        boolean isAdmin = authentication.getAuthorities().stream()
+                .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("userRole", isAdmin ? "ADMIN" : "USER");
+        
         return "dashboard";
     }
 
@@ -46,6 +54,7 @@ public class ViewController {
     }
 
     @GetMapping("/admin/users-page")
+    @PreAuthorize("hasRole('ADMIN')")
     public String usersPage(Model model) {
         model.addAttribute("users", userService.findAll());
         return "admin-users";

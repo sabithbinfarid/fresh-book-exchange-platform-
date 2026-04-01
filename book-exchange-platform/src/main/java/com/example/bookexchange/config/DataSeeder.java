@@ -40,6 +40,18 @@ public class DataSeeder {
                 userRepository.save(admin);
             }
 
+            if (userRepository.findByEmail("user@bookexchange.com").isEmpty()) {
+                Role userRole = roleRepository.findByName(RoleName.USER).orElseThrow();
+                User user = User.builder()
+                    .fullName("Normal User")
+                    .email("user@bookexchange.com")
+                    .password(passwordEncoder.encode("User@123"))
+                    .enabled(true)
+                    .roles(Set.of(userRole))
+                    .build();
+                userRepository.save(user);
+            }
+
             if (bookRepository.count() == 0) {
                 User admin = userRepository.findByEmail("admin@bookexchange.com").orElseThrow();
                 bookRepository.save(Book.builder().title("Clean Code").author("Robert C. Martin")

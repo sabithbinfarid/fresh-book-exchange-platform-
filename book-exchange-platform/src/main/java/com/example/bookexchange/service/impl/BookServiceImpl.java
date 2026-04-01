@@ -92,7 +92,7 @@ public class BookServiceImpl implements BookService {
 
     private void validateSellerRole(User seller) {
         boolean isSeller = seller.getRoles().stream()
-            .anyMatch(role -> role.getName() == RoleName.SELLER || role.getName() == RoleName.ADMIN);
+            .anyMatch(role -> role.getName() == RoleName.USER || role.getName() == RoleName.ADMIN);
         if (!isSeller) {
             throw new BadRequestException("Selected user is not allowed to sell books");
         }

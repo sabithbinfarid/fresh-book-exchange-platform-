@@ -21,6 +21,5 @@ public class BookRequest {
     private BigDecimal price;
     @NotNull
     private BookStatus status;
-    @NotNull
     private Long sellerId;
 }

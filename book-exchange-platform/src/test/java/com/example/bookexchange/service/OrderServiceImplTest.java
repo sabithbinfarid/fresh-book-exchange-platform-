@@ -36,8 +36,8 @@ class OrderServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        buyer = User.builder().id(2L).fullName("Buyer").roles(java.util.Set.of(new Role(RoleName.BUYER))).build();
-        User seller = User.builder().id(1L).fullName("Seller").roles(java.util.Set.of(new Role(RoleName.SELLER))).build();
+        buyer = User.builder().id(2L).fullName("Buyer").roles(java.util.Set.of(new Role(RoleName.USER))).build();
+        User seller = User.builder().id(1L).fullName("Seller").roles(java.util.Set.of(new Role(RoleName.USER))).build();
         book = Book.builder().id(1L).title("Book A").author("Auth").price(BigDecimal.TEN).status(BookStatus.AVAILABLE).seller(seller).build();
         request = new OrderRequest();
         request.setBookId(1L);
@@ -71,10 +71,10 @@ class OrderServiceImplTest {
     }
 
 
-    @Test void create_shouldRejectNonBuyerUser() {
-        User sellerOnly = User.builder().id(2L).fullName("Seller").roles(java.util.Set.of(new Role(RoleName.SELLER))).build();
+    @Test void create_shouldRejectUserWithoutAllowedRole() {
+        User noRoleUser = User.builder().id(2L).fullName("No Role User").roles(java.util.Set.of()).build();
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(sellerOnly));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(noRoleUser));
         assertThrows(BadRequestException.class, () -> orderService.create(request));
     }
 

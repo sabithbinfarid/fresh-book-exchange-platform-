@@ -33,28 +33,27 @@ class UserServiceImplTest {
     @InjectMocks UserServiceImpl userService;
 
     RegisterRequest request;
-    Role buyerRole;
+    Role userRole;
 
     @BeforeEach
     void setUp() {
         request = new RegisterRequest();
-        request.setFullName("Buyer One");
-        request.setEmail("buyer@example.com");
+        request.setFullName("User One");
+        request.setEmail("user@example.com");
         request.setPassword("secret123");
-        request.setRoleName(RoleName.BUYER);
-        buyerRole = new Role(RoleName.BUYER);
+        userRole = new Role(RoleName.USER);
     }
 
     @Test void register_shouldCreateUser() {
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(roleRepository.findByName(RoleName.BUYER)).thenReturn(Optional.of(buyerRole));
+        when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.of(userRole));
         when(passwordEncoder.encode(request.getPassword())).thenReturn("hashed");
         when(userRepository.save(any(User.class))).thenAnswer(i -> { User u = i.getArgument(0); u.setId(1L); return u;});
 
         var response = userService.register(request);
 
-        assertEquals("buyer@example.com", response.getEmail());
-        assertTrue(response.getRoles().contains("BUYER"));
+        assertEquals("user@example.com", response.getEmail());
+        assertTrue(response.getRoles().contains("USER"));
         verify(userRepository).save(any(User.class));
     }
 
@@ -63,26 +62,20 @@ class UserServiceImplTest {
         assertThrows(BadRequestException.class, () -> userService.register(request));
     }
 
-    @Test void register_shouldRejectAdminSelfRegistration() {
-        request.setRoleName(RoleName.ADMIN);
-        when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        assertThrows(BadRequestException.class, () -> userService.register(request));
-    }
-
     @Test void register_shouldThrowWhenRoleMissing() {
         when(userRepository.existsByEmail(request.getEmail())).thenReturn(false);
-        when(roleRepository.findByName(RoleName.BUYER)).thenReturn(Optional.empty());
+        when(roleRepository.findByName(RoleName.USER)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> userService.register(request));
     }
 
     @Test void findAll_shouldReturnUsers() {
-        User user = User.builder().id(1L).fullName("A").email("a@a.com").password("p").roles(Set.of(buyerRole)).build();
+        User user = User.builder().id(1L).fullName("A").email("a@a.com").password("p").roles(Set.of(userRole)).build();
         when(userRepository.findAll()).thenReturn(List.of(user));
         assertEquals(1, userService.findAll().size());
     }
 
     @Test void findById_shouldReturnUser() {
-        User user = User.builder().id(1L).fullName("A").email("a@a.com").password("p").roles(Set.of(buyerRole)).build();
+        User user = User.builder().id(1L).fullName("A").email("a@a.com").password("p").roles(Set.of(userRole)).build();
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         assertEquals(1L, userService.findById(1L).getId());
     }

@@ -23,17 +23,21 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/register", "/css/**", "/js/**", "/images/**").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
 
+                // Admin pages - ADMIN only
                 .requestMatchers("/admin/**").hasRole("ADMIN")
                 .requestMatchers("/api/users/**").hasRole("ADMIN")
 
-                .requestMatchers(HttpMethod.GET, "/api/books/**").hasAnyRole("ADMIN", "SELLER", "BUYER")
-                .requestMatchers(HttpMethod.POST, "/api/books/**").hasAnyRole("ADMIN", "SELLER")
-                .requestMatchers(HttpMethod.PUT, "/api/books/**").hasAnyRole("ADMIN", "SELLER")
-                .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasAnyRole("ADMIN", "SELLER")
+                // Books - CRUD only for ADMIN, VIEW for all authenticated users
+                .requestMatchers(HttpMethod.GET, "/api/books/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/books/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/books/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/books/**").hasRole("ADMIN")
 
-                .requestMatchers(HttpMethod.GET, "/api/orders/**").hasAnyRole("ADMIN", "BUYER")
-                .requestMatchers(HttpMethod.POST, "/api/orders/**").hasAnyRole("ADMIN", "BUYER")
+                // Orders - Users can view and create, only ADMIN can modify/delete
+                .requestMatchers(HttpMethod.GET, "/api/orders/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/orders/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PUT, "/api/orders/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/orders/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/orders/**").hasRole("ADMIN")

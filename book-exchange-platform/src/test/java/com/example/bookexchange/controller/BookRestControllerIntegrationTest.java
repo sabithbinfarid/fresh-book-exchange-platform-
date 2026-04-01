@@ -25,14 +25,14 @@ class BookRestControllerIntegrationTest {
     @Autowired ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser(roles = "BUYER")
+    @WithMockUser(roles = "USER")
     void getBooks_shouldReturnOk() throws Exception {
         mockMvc.perform(get("/api/books"))
             .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(roles = "SELLER")
+    @WithMockUser(roles = "ADMIN")
     void createBook_shouldReturnCreated() throws Exception {
         BookRequest request = new BookRequest();
         request.setTitle("New Book");
@@ -48,8 +48,8 @@ class BookRestControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "BUYER")
-    void deleteBook_asBuyer_shouldBeForbidden() throws Exception {
+    @WithMockUser(roles = "USER")
+    void deleteBook_asUser_shouldBeForbidden() throws Exception {
         mockMvc.perform(delete("/api/books/1"))
             .andExpect(status().isForbidden());
     }

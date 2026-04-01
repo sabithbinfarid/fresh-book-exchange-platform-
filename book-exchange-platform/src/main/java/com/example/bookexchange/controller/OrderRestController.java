@@ -22,19 +22,17 @@ public class OrderRestController {
     }
 
     @PostMapping
-    @PreAuthorize("hasAnyRole('ADMIN','BUYER')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request) {
         return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(request));
     }
 
     @GetMapping
-    @PreAuthorize("hasAnyRole('ADMIN','BUYER')")
     public List<OrderResponse> getAll() {
         return orderService.findAll();
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN','BUYER')")
     public OrderResponse getById(@PathVariable Long id) {
         return orderService.findById(id);
     }

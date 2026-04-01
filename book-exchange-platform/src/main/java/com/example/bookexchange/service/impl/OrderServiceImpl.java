@@ -6,6 +6,7 @@ import com.example.bookexchange.entity.Book;
 import com.example.bookexchange.entity.BookOrder;
 import com.example.bookexchange.entity.BookStatus;
 import com.example.bookexchange.entity.OrderStatus;
+import com.example.bookexchange.entity.RoleName;
 import com.example.bookexchange.entity.User;
 import com.example.bookexchange.exception.BadRequestException;
 import com.example.bookexchange.exception.ResourceNotFoundException;
@@ -39,7 +40,8 @@ public class OrderServiceImpl implements OrderService {
         }
         User buyer = userRepository.findById(request.getBuyerId())
             .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with id " + request.getBuyerId()));
-        boolean isBuyer = buyer.getRoles().stream().anyMatch(role -> role.getName().name().equals("BUYER") || role.getName().name().equals("ADMIN"));
+        boolean isBuyer = buyer.getRoles().stream()
+            .anyMatch(role -> role.getName() == RoleName.USER || role.getName() == RoleName.ADMIN);
         if (!isBuyer) {
             throw new BadRequestException("Selected user is not allowed to place orders");
         }

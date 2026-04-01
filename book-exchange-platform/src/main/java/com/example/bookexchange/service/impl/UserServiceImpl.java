@@ -33,11 +33,10 @@ public class UserServiceImpl implements UserService {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email already registered");
         }
-        if (request.getRoleName() == RoleName.ADMIN) {
-            throw new BadRequestException("Self-registration as ADMIN is not allowed");
-        }
-        Role role = roleRepository.findByName(request.getRoleName())
-            .orElseThrow(() -> new ResourceNotFoundException("Role not found"));
+
+        // Public registration always creates a USER account.
+        Role role = roleRepository.findByName(RoleName.USER)
+            .orElseThrow(() -> new ResourceNotFoundException("Default USER role not found"));
 
         User user = User.builder()
             .fullName(request.getFullName())

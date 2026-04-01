@@ -37,7 +37,7 @@ class BookServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        seller = User.builder().id(1L).fullName("Seller").roles(java.util.Set.of(new Role(RoleName.SELLER))).build();
+        seller = User.builder().id(1L).fullName("Seller").roles(java.util.Set.of(new Role(RoleName.USER))).build();
         request = new BookRequest();
         request.setTitle("Spring in Action");
         request.setAuthor("Craig Walls");
@@ -59,9 +59,9 @@ class BookServiceImplTest {
     }
 
 
-    @Test void create_shouldRejectNonSellerUser() {
-        User buyerOnly = User.builder().id(1L).fullName("Buyer").roles(java.util.Set.of(new Role(RoleName.BUYER))).build();
-        when(userRepository.findById(1L)).thenReturn(Optional.of(buyerOnly));
+    @Test void create_shouldRejectUserWithoutAllowedRole() {
+        User unknownRoleUser = User.builder().id(1L).fullName("No Role User").roles(java.util.Set.of()).build();
+        when(userRepository.findById(1L)).thenReturn(Optional.of(unknownRoleUser));
         assertThrows(BadRequestException.class, () -> bookService.create(request));
     }
 
