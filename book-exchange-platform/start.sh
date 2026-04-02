@@ -9,7 +9,7 @@ echo "================================"
 echo "Book Exchange Platform"
 echo "Docker Compose Setup"
 echo "================================"
-
+#need to check if docker and docker compose are installed before running the command
 # Check if Docker is installed
 if ! command -v docker &> /dev/null; then
     echo "❌ Docker is not installed. Please install Docker Desktop."

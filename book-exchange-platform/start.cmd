@@ -7,6 +7,7 @@ setlocal enabledelayedexpansion
 echo.
 echo ================================
 echo Book Exchange Platform
+
 echo Docker Compose Setup
 echo ================================
 echo.
