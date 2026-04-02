@@ -22,7 +22,7 @@ class OrderRestControllerIntegrationTest {
     @Autowired ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser(roles = "ADMIN")
+    @WithMockUser(username = "admin@bookexchange.com", roles = "ADMIN")
     void createOrder_asAdmin_shouldReturnCreated() throws Exception {
         OrderRequest request = new OrderRequest();
         request.setBookId(1L);
@@ -35,27 +35,27 @@ class OrderRestControllerIntegrationTest {
     }
 
     @Test
-    @WithMockUser(roles = "USER")
-    void createOrder_asUser_shouldBeForbidden() throws Exception {
+    @WithMockUser(username = "user@bookexchange.com", roles = "USER")
+    void createOrder_asUser_shouldReturnCreated() throws Exception {
         OrderRequest request = new OrderRequest();
-        request.setBookId(1L);
+        request.setBookId(2L);
         request.setBuyerId(2L);
 
         mockMvc.perform(post("/api/orders")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isForbidden());
+            .andExpect(status().isCreated());
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(username = "user@bookexchange.com", roles = "USER")
     void getOrders_shouldReturnOk() throws Exception {
         mockMvc.perform(get("/api/orders"))
             .andExpect(status().isOk());
     }
 
     @Test
-    @WithMockUser(roles = "USER")
+    @WithMockUser(username = "user@bookexchange.com", roles = "USER")
     void updateOrderStatus_asUser_shouldBeForbidden() throws Exception {
         mockMvc.perform(patch("/api/orders/1/status").param("status", "APPROVED"))
             .andExpect(status().isForbidden());
