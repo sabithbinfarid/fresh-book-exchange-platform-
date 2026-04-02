@@ -8,7 +8,10 @@ import java.util.List;
 
 public interface OrderService {
     OrderResponse create(OrderRequest request);
+    OrderResponse createForUser(Long bookId, String userEmail);
     List<OrderResponse> findAll();
+    List<OrderResponse> findForUser(Long userId, boolean adminView);
+    List<Long> findActiveBorrowedBookIdsByUser(Long userId);
     OrderResponse findById(Long id);
     OrderResponse updateStatus(Long id, OrderStatus status);
     void delete(Long id);

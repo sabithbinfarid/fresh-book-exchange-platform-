@@ -9,6 +9,5 @@ import lombok.Setter;
 public class OrderRequest {
     @NotNull
     private Long bookId;
-    @NotNull
     private Long buyerId;
 }

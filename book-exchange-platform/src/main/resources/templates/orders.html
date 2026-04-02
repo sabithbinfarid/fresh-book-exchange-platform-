@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Orders - Book Exchange Platform</title>
+    <title>My Borrows - Book Exchange Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -289,31 +289,31 @@
 
     <div class="page-header">
         <div class="container">
-            <h1>📦 My Orders</h1>
+            <h1>📚 My Borrowed Books</h1>
         </div>
     </div>
 
     <div class="container pb-5">
-        <div th:if="${orders.isEmpty()}" class="no-orders">
+        <div th:if="${borrows.isEmpty()}" class="no-orders">
             <div class="no-orders-icon">📦</div>
-            <h4>No Orders Yet</h4>
-            <p>You haven't placed any orders yet. Start browsing books now!</p>
+            <h4>No Borrows Yet</h4>
+            <p>You haven't borrowed any books yet. Start browsing books now!</p>
             <a href="/books-page" class="btn-dashboard">Browse Books →</a>
         </div>
 
-        <div th:unless="${orders.isEmpty()}" class="row">
+        <div th:unless="${borrows.isEmpty()}" class="row">
             <div class="col-lg-8">
-                <div th:each="order : ${orders}" class="order-card">
+                <div th:each="order : ${borrows}" class="order-card">
                     <div class="card-body p-4">
                         <div class="order-header">
                             <div>
-                                <div class="order-id">📦 Order #<span th:text="${order.id}"></span></div>
+                                <div class="order-id">📦 Borrow #<span th:text="${order.id}"></span></div>
                             </div>
-                            <span th:class="'order-status ' + 
-                                ('PENDING' == ${order.status} ? 'status-pending' : 
-                                 'CONFIRMED' == ${order.status} ? 'status-confirmed' : 
-                                 'COMPLETED' == ${order.status} ? 'status-completed' : 
-                                 'CANCELLED' == ${order.status} ? 'status-cancelled' : '')"
+                            <span class="order-status"
+                                  th:classappend="${order.status.name() == 'PENDING'} ? ' status-pending' :
+                                                  (${order.status.name() == 'APPROVED'} ? ' status-confirmed' :
+                                                  (${order.status.name() == 'COMPLETED'} ? ' status-completed' :
+                                                  (${order.status.name() == 'CANCELLED'} ? ' status-cancelled' : '')))"
                                   th:text="${order.status}">
                             </span>
                         </div>
@@ -324,30 +324,21 @@
                                 <div class="info-value" th:text="${order.bookTitle}"></div>
                             </div>
                             <div class="info-item">
-                                <div class="info-label">✍️ Author</div>
-                                <div class="info-value" th:text="${order.bookAuthor}"></div>
+                                <div class="info-label">👤 Buyer</div>
+                                <div class="info-value" th:text="${order.buyerName}"></div>
                             </div>
                             <div class="info-item">
-                                <div class="info-label">💰 Price</div>
-                                <div class="info-value">Rs. <span th:text="${order.bookPrice}"></span></div>
-                            </div>
-                            <div class="info-item">
-                                <div class="info-label">👤 Seller</div>
-                                <div class="info-value" th:text="${order.sellerName}"></div>
+                                <div class="info-label">🆔 Book ID</div>
+                                <div class="info-value" th:text="${order.bookId}"></div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">📅 Date</div>
-                                <div class="info-value" th:text="${#dates.format(order.createdAt, 'MMM dd')}"></div>
+                                <div class="info-value" th:text="${#temporals.format(order.orderedAt, 'MMM dd, yyyy')}"></div>
                             </div>
                             <div class="info-item">
                                 <div class="info-label">⏱️ Time</div>
-                                <div class="info-value" th:text="${#dates.format(order.createdAt, 'HH:mm')}"></div>
+                                <div class="info-value" th:text="${#temporals.format(order.orderedAt, 'HH:mm')}"></div>
                             </div>
-                        </div>
-
-                        <div class="order-notes" th:if="${order.notes}">
-                            <strong>📝 Notes</strong>
-                            <div class="notes-item" th:text="${order.notes}"></div>
                         </div>
                     </div>
                 </div>
@@ -355,25 +346,25 @@
 
             <div class="col-lg-4">
                 <div class="summary-card p-4">
-                    <h5 class="summary-title">📊 Order Summary</h5>
+                    <h5 class="summary-title">📊 Borrow Summary</h5>
                     
                     <div class="summary-stat">
-                        <div class="summary-label">Total Orders</div>
-                        <div class="summary-value" th:text="${orders.size()}"></div>
+                        <div class="summary-label">Total Borrows</div>
+                        <div class="summary-value" th:text="${borrows.size()}"></div>
                     </div>
 
                     <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 20px 0;">
                         <div class="status-row">
                             <span>🟡 Pending</span>
-                            <span th:text="${#lists.size(T(java.util.Arrays).stream(orders).filter(o -> 'PENDING' == o.status).toList())}"></span>
+                            <span th:text="${borrows.?[status.name() == 'PENDING'].size()}"></span>
                         </div>
                         <div class="status-row">
-                            <span>🔵 Confirmed</span>
-                            <span th:text="${#lists.size(T(java.util.Arrays).stream(orders).filter(o -> 'CONFIRMED' == o.status).toList())}"></span>
+                            <span>🔵 Approved</span>
+                            <span th:text="${borrows.?[status.name() == 'APPROVED'].size()}"></span>
                         </div>
                         <div class="status-row">
                             <span>✅ Completed</span>
-                            <span th:text="${#lists.size(T(java.util.Arrays).stream(orders).filter(o -> 'COMPLETED' == o.status).toList())}"></span>
+                            <span th:text="${borrows.?[status.name() == 'COMPLETED'].size()}"></span>
                         </div>
                     </div>
 

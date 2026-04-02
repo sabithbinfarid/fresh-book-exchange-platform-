@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6" lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -122,6 +122,30 @@
             font-size: 15px;
             line-height: 1.6;
         }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+            margin-bottom: 24px;
+            text-align: left;
+        }
+        .stat-item {
+            background: rgba(102, 126, 234, 0.12);
+            border: 1px solid rgba(102, 126, 234, 0.25);
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .stat-label {
+            color: var(--light-text);
+            font-size: 12px;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+        .stat-value {
+            color: white;
+            font-size: 24px;
+            font-weight: 700;
+        }
         .btn-action {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             border: none;
@@ -177,10 +201,10 @@
             <h1>Welcome, <span th:text="${name}"></span>! 👋</h1>
             <p>You are logged in as: <strong th:text="'[' + ${userRole} + ']'"></strong></p>
             <p th:if="${isAdmin}" style="font-size: 16px; margin-top: 10px; opacity: 0.9;">
-                ✅ <strong>Admin Access Enabled</strong> - You can manage books, users, and orders
+                ✅ <strong>Admin Access Enabled</strong> - You can manage books, users, and borrow records
             </p>
             <p th:unless="${isAdmin}" style="font-size: 16px; margin-top: 10px; opacity: 0.9;">
-                👤 <strong>User Access</strong> - You can browse and order books
+                👤 <strong>User Access</strong> - You can browse and borrow books
             </p>
         </div>
     </div>
@@ -192,18 +216,57 @@
                     <div class="card-body text-center">
                         <div class="card-icon">📚</div>
                         <h5 class="card-title">Browse Books</h5>
-                        <p class="card-text">Explore the collection of books available for exchange and place orders</p>
+                        <p class="card-text">Explore the collection of books available for exchange and borrow books</p>
                         <a href="/books-page" class="btn-action">View Books →</a>
                     </div>
                 </div>
             </div>
             <div class="col-md-6 mb-4">
                 <div class="card">
-                    <div class="card-body text-center">
+                    <div class="card-body text-center" th:if="${!isAdmin}">
                         <div class="card-icon">⏰</div>
-                        <h5 class="card-title">My Orders</h5>
-                        <p class="card-text">Track orders and manage your book exchange transactions</p>
-                        <a href="/orders-page" class="btn-action">Check Orders →</a>
+                        <h5 class="card-title">My Borrows</h5>
+                        <p class="card-text">Track your borrowed books and manage your exchange activity</p>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-label">My Total Borrows</div>
+                                <div class="stat-value" th:text="${myBorrowsCount}">0</div>
+                            </div>
+                        </div>
+                        <a href="/borrow-page" class="btn-action">Check Borrows →</a>
+                    </div>
+
+                    <div class="card-body text-center" th:if="${isAdmin}">
+                        <div class="card-icon">📊</div>
+                        <h5 class="card-title">Borrow Status Overview</h5>
+                        <p class="card-text">Live stock and borrowing status of books in the platform</p>
+                        <div class="stat-grid">
+                            <div class="stat-item">
+                                <div class="stat-label">Total Books</div>
+                                <div class="stat-value" th:text="${totalBooks}">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Available</div>
+                                <div class="stat-value" th:text="${availableBooks}">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Reserved</div>
+                                <div class="stat-value" th:text="${reservedBooks}">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Sold</div>
+                                <div class="stat-value" th:text="${soldBooks}">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Pending Borrows</div>
+                                <div class="stat-value" th:text="${pendingBorrows}">0</div>
+                            </div>
+                            <div class="stat-item">
+                                <div class="stat-label">Completed Borrows</div>
+                                <div class="stat-value" th:text="${completedBorrows}">0</div>
+                            </div>
+                        </div>
+                        <a href="/borrow-page" class="btn-action">View Borrow Records →</a>
                     </div>
                 </div>
             </div>

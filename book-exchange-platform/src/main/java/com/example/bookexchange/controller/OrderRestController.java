@@ -8,12 +8,13 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping({"/api/orders", "/api/borrows"})
 public class OrderRestController {
     private final OrderService orderService;
 
@@ -22,9 +23,10 @@ public class OrderRestController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(orderService.create(request));
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<OrderResponse> create(@Valid @RequestBody OrderRequest request, Authentication authentication) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(orderService.createForUser(request.getBookId(), authentication.getName()));
     }
 
     @GetMapping

@@ -37,10 +37,15 @@ public class SecurityConfig {
 
                 // Orders - Users can view and create, only ADMIN can modify/delete
                 .requestMatchers(HttpMethod.GET, "/api/orders/**").authenticated()
-                .requestMatchers(HttpMethod.POST, "/api/orders/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/orders/**").authenticated()
                 .requestMatchers(HttpMethod.PUT, "/api/orders/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.PATCH, "/api/orders/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.DELETE, "/api/orders/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/borrows/**").authenticated()
+                .requestMatchers(HttpMethod.POST, "/api/borrows/**").authenticated()
+                .requestMatchers(HttpMethod.PUT, "/api/borrows/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.PATCH, "/api/borrows/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/borrows/**").hasRole("ADMIN")
 
                 .anyRequest().authenticated()
             )

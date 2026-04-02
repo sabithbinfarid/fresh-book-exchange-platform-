@@ -15,12 +15,18 @@ import com.example.bookexchange.repository.BookRepository;
 import com.example.bookexchange.repository.UserRepository;
 import com.example.bookexchange.service.OrderService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
+@Transactional
 public class OrderServiceImpl implements OrderService {
+    private static final Set<OrderStatus> ACTIVE_BORROW_STATUSES = EnumSet.of(OrderStatus.PENDING, OrderStatus.APPROVED);
+
     private final BookOrderRepository orderRepository;
     private final BookRepository bookRepository;
     private final UserRepository userRepository;
@@ -33,17 +39,40 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public OrderResponse create(OrderRequest request) {
-        Book book = bookRepository.findById(request.getBookId())
-            .orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + request.getBookId()));
-        if (book.getStatus() != BookStatus.AVAILABLE) {
-            throw new BadRequestException("Book is not available for ordering");
+        if (request.getBuyerId() == null) {
+            throw new BadRequestException("Buyer id is required for this endpoint");
         }
+
         User buyer = userRepository.findById(request.getBuyerId())
             .orElseThrow(() -> new ResourceNotFoundException("Buyer not found with id " + request.getBuyerId()));
+
+        return createBorrow(request.getBookId(), buyer);
+    }
+
+    @Override
+    public OrderResponse createForUser(Long bookId, String userEmail) {
+        User buyer = userRepository.findByEmail(userEmail)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + userEmail));
+
+        return createBorrow(bookId, buyer);
+    }
+
+    private OrderResponse createBorrow(Long bookId, User buyer) {
+        Book book = bookRepository.findById(bookId)
+            .orElseThrow(() -> new ResourceNotFoundException("Book not found with id " + bookId));
+
         boolean isBuyer = buyer.getRoles().stream()
             .anyMatch(role -> role.getName() == RoleName.USER || role.getName() == RoleName.ADMIN);
         if (!isBuyer) {
             throw new BadRequestException("Selected user is not allowed to place orders");
+        }
+
+        if (orderRepository.existsByBuyer_IdAndBook_IdAndStatusIn(buyer.getId(), book.getId(), ACTIVE_BORROW_STATUSES)) {
+            throw new BadRequestException("You already borrowed this book");
+        }
+
+        if (book.getStatus() != BookStatus.AVAILABLE || orderRepository.existsByBook_IdAndStatusIn(book.getId(), ACTIVE_BORROW_STATUSES)) {
+            throw new BadRequestException("Book is not available for borrowing");
         }
 
         book.setStatus(BookStatus.RESERVED);
@@ -60,7 +89,20 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public List<OrderResponse> findAll() {
-        return orderRepository.findAll().stream().map(this::mapToResponse).toList();
+        return orderRepository.findAllByOrderByOrderedAtDesc().stream().map(this::mapToResponse).toList();
+    }
+
+    @Override
+    public List<OrderResponse> findForUser(Long userId, boolean adminView) {
+        List<BookOrder> orders = adminView
+            ? orderRepository.findAllByOrderByOrderedAtDesc()
+            : orderRepository.findAllByBuyer_IdOrderByOrderedAtDesc(userId);
+        return orders.stream().map(this::mapToResponse).toList();
+    }
+
+    @Override
+    public List<Long> findActiveBorrowedBookIdsByUser(Long userId) {
+        return orderRepository.findBookIdsByBuyerAndStatusIn(userId, ACTIVE_BORROW_STATUSES);
     }
 
 
@@ -89,7 +131,7 @@ public class OrderServiceImpl implements OrderService {
         BookOrder order = orderRepository.findById(id)
             .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
 
-        if (order.getStatus() == OrderStatus.PENDING || order.getStatus() == OrderStatus.APPROVED) {
+        if (ACTIVE_BORROW_STATUSES.contains(order.getStatus())) {
             Book book = order.getBook();
             book.setStatus(BookStatus.AVAILABLE);
             bookRepository.save(book);

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users - Book Exchange Platform</title>
+    <title>User Accounts - Book Exchange Platform</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         * {
@@ -88,6 +88,11 @@
         }
         .table {
             margin: 0;
+            --bs-table-bg: transparent;
+            --bs-table-color: var(--dark-text);
+            --bs-table-border-color: rgba(255,255,255,0.1);
+            --bs-table-hover-bg: rgba(102, 126, 234, 0.1);
+            --bs-table-hover-color: var(--dark-text);
         }
         .table thead {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -103,6 +108,16 @@
             vertical-align: middle;
             border-color: rgba(255,255,255,0.1);
             color: var(--dark-text);
+        }
+        .table.table-hover tbody,
+        .table.table-hover tbody tr,
+        .table.table-hover tbody td {
+            background-color: var(--dark-card) !important;
+            color: var(--dark-text) !important;
+        }
+        .table.table-hover tbody tr:hover td {
+            background-color: rgba(102, 126, 234, 0.16) !important;
+            color: var(--dark-text) !important;
         }
         .table tbody tr {
             border-bottom: 1px solid rgba(255,255,255,0.08);
@@ -187,7 +202,7 @@
 
     <div class="page-header">
         <div class="container">
-            <h1>👥 Platform Users (Admin Only)</h1>
+            <h1>👤 Non-Admin Login Users</h1>
         </div>
     </div>
 
@@ -195,7 +210,7 @@
         <div th:if="${users.isEmpty()}" class="no-users">
             <div class="no-users-icon">👥</div>
             <h4>No Users Found</h4>
-            <p>There are currently no users in the platform.</p>
+            <p>There are currently no non-admin user accounts in the platform.</p>
         </div>
 
         <div th:unless="${users.isEmpty()}" class="table-container">
@@ -207,6 +222,7 @@
                             <th>Email</th>
                             <th>Full Name</th>
                             <th>Roles</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -216,9 +232,13 @@
                             <td><span th:text="${user.fullName}"></span></td>
                             <td>
                                 <span th:each="role : ${user.roles}" 
-                                      th:class="'role-badge role-' + ${role.name?.toLowerCase()}"
-                                      th:text="${role.name}">
+                                      th:class="'role-badge role-' + ${#strings.toLowerCase(role)}"
+                                      th:text="${role}">
                                 </span>
+                            </td>
+                            <td>
+                                <span th:class="${user.enabled} ? 'role-badge role-admin' : 'role-badge role-buyer'"
+                                      th:text="${user.enabled} ? 'ACTIVE' : 'DISABLED'"></span>
                             </td>
                         </tr>
                     </tbody>
