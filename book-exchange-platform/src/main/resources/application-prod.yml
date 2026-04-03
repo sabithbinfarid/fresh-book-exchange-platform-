@@ -1,6 +1,10 @@
 spring:
   datasource:
+    url: ${SPRING_DATASOURCE_URL:${DATABASE_URL:${JDBC_DATABASE_URL:jdbc:postgresql://${PGHOST}:${PGPORT:5432}/${PGDATABASE}}}}
+    username: ${SPRING_DATASOURCE_USERNAME:${DATABASE_USER:${PGUSER:postgres}}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DATABASE_PASSWORD:${PGPASSWORD:postgres}}}
     hikari:
+      initialization-fail-timeout: -1
       maximum-pool-size: 5
       minimum-idle: 1
       idle-timeout: 30000
@@ -8,6 +12,9 @@ spring:
       connection-timeout: 20000
   jpa:
     open-in-view: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
   thymeleaf:
     cache: true
 
