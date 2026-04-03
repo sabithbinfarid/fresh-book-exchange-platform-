@@ -1,7 +1,7 @@
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 COPY pom.xml .
-COPY src src
+COPY /book-exchange-platform/src /book-exchange-platform/src
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
