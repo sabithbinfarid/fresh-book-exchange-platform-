@@ -1,6 +1,6 @@
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
-COPY pom.xml .
+COPY /book-exchange-platformpom.xml .
 COPY /book-exchange-platform/src /book-exchange-platform/src
 RUN mvn clean package -DskipTests
 
