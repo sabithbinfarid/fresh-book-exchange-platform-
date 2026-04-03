@@ -1,9 +1,10 @@
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
 
-# Copy from the current build context (Render uses repo/project root as context)
-COPY pom.xml .
-COPY src ./src
+# Render is currently using the repository root as build context,
+# so copy project files from the book-exchange-platform subdirectory.
+COPY book-exchange-platform/pom.xml .
+COPY book-exchange-platform/src ./src
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
