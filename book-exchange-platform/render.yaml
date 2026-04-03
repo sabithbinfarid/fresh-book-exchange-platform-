@@ -3,7 +3,8 @@ services:
     name: book-exchange-platform
     runtime: docker
     plan: free
-    autoDeploy: true
+    autoDeployTrigger: commit
+    healthCheckPath: /login
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod

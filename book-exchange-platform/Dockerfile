@@ -8,4 +8,4 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 COPY --from=builder /app/target/book-exchange-platform-0.0.1-SNAPSHOT.jar app.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-Dserver.port=8080", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "if [ -n \"$SPRING_DATASOURCE_URL\" ] && [ \"${SPRING_DATASOURCE_URL#jdbc:}\" = \"$SPRING_DATASOURCE_URL\" ]; then case \"$SPRING_DATASOURCE_URL\" in postgres://*) export SPRING_DATASOURCE_URL=\"jdbc:postgresql://${SPRING_DATASOURCE_URL#postgres://}\" ;; postgresql://*) export SPRING_DATASOURCE_URL=\"jdbc:postgresql://${SPRING_DATASOURCE_URL#postgresql://}\" ;; *) export SPRING_DATASOURCE_URL=\"jdbc:${SPRING_DATASOURCE_URL}\" ;; esac; fi; exec java ${JAVA_OPTS} -Dserver.port=${PORT:-8080} -jar app.jar"]
