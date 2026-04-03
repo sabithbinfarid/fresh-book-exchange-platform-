@@ -91,6 +91,8 @@ public class ViewController {
         boolean isAdmin = authentication != null && authentication.getAuthorities().stream()
             .anyMatch(auth -> auth.getAuthority().equals("ROLE_ADMIN"));
 
+        model.addAttribute("isAdmin", isAdmin);
+        model.addAttribute("userRole", isAdmin ? "ADMIN" : "USER");
         model.addAttribute("borrows", orderService.findForUser(userId, isAdmin));
         return "orders";
     }

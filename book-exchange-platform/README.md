@@ -1,11 +1,11 @@
-# Book Exchange Platform
+# Community Library Platform
 
 A full-stack Spring Boot project designed to score strongly against the Software Engineering Lab Project rubric. It demonstrates layered architecture, Spring Security, DTO-driven REST APIs, PostgreSQL, Docker, GitHub Actions CI/CD, and Render deployment.
 
-> This starter is aligned to the uploaded project guideline and the Book Exchange Platform theme.
+> This starter is aligned to the uploaded project guideline and the Community Library Platform theme.
 
 ## Project Theme
-Book Exchange Platform with three roles:
+Community Library Platform with three roles:
 - **ADMIN**: manages users, books, and order approvals
 - **SELLER**: lists books
 - **BUYER**: browses and orders books

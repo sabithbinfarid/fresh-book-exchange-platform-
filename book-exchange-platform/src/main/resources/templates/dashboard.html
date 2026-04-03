@@ -3,276 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard - Book Exchange Platform</title>
+    <title>Dashboard - Community Library Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --primary: #667eea;
-            --secondary: #764ba2;
-            --dark-bg: #0f0f0f;
-            --dark-card: #1a1a1a;
-            --dark-text: #f0f0f0;
-            --light-text: #b0b0b0;
-        }
-        body {
-            background-color: var(--dark-bg);
-            color: var(--dark-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-        }
-        .navbar-brand {
-            font-size: 24px;
-            font-weight: 700;
-            color: white !important;
-        }
-        .navbar-brand span {
-            margin-left: 10px;
-        }
-        .nav-link {
-            margin: 0 10px;
-            font-weight: 500;
-            transition: all 0.3s;
-            color: rgba(255,255,255,0.9) !important;
-        }
-        .nav-link:hover {
-            color: #ffc107 !important;
-        }
-        .role-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin-left: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .role-badge.admin {
-            background: rgba(34, 197, 94, 0.3);
-            color: #86efac;
-            border: 1px solid rgba(34, 197, 94, 0.5);
-        }
-        .role-badge.user {
-            background: rgba(59, 130, 246, 0.3);
-            color: #93c5fd;
-            border: 1px solid rgba(59, 130, 246, 0.5);
-        }
-        .navbar-toggler {
-            border-color: rgba(255,255,255,0.5);
-        }
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-        .dashboard-hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 80px 20px;
-            text-align: center;
-            margin-bottom: 60px;
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
-        }
-        .dashboard-hero h1 {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 15px;
-        }
-        .dashboard-hero p {
-            font-size: 18px;
-            opacity: 0.95;
-        }
-        .card {
-            background-color: var(--dark-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            transition: all 0.3s;
-            height: 100%;
-        }
-        .card:hover {
-            transform: translateY(-8px);
-            border-color: rgba(102, 126, 234, 0.5);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
-        }
-        .card-body {
-            padding: 40px !important;
-        }
-        .card-icon {
-            font-size: 56px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-        .card-title {
-            font-size: 28px;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 15px;
-        }
-        .card-text {
-            color: var(--light-text);
-            margin-bottom: 25px;
-            font-size: 15px;
-            line-height: 1.6;
-        }
-        .stat-grid {
-            display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 12px;
-            margin-bottom: 24px;
-            text-align: left;
-        }
-        .stat-item {
-            background: rgba(102, 126, 234, 0.12);
-            border: 1px solid rgba(102, 126, 234, 0.25);
-            border-radius: 10px;
-            padding: 12px;
-        }
-        .stat-label {
-            color: var(--light-text);
-            font-size: 12px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-        .stat-value {
-            color: white;
-            font-size: 24px;
-            font-weight: 700;
-        }
-        .btn-action {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: none;
-            padding: 12px 30px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s;
-            color: white;
-            text-decoration: none;
-            display: inline-block;
-        }
-        .btn-action:hover {
-            transform: translateY(-3px);
-            color: white;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-        .container {
-            max-width: 1200px;
-        }
-    </style>
+    <link th:href="@{/css/app-theme.css}" rel="stylesheet">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/dashboard">📚<span>Book Exchange</span></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/books-page">📖 Books</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                        <a class="nav-link" href="/admin/users-page">👥 Users</a>
-                    </li>
-                    <li class="nav-item">
-                        <span th:class="'role-badge ' + (${isAdmin} ? 'admin' : 'user')" 
-                              th:text="${userRole}"></span>
-                    </li>
-                    <li class="nav-item">
-                        <form th:action="@{/logout}" method="post" class="d-inline">
-                            <button type="submit" class="nav-link btn btn-link" style="color: rgba(255,255,255,0.9);">🚪 Logout</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<body th:class="${isAdmin} ? 'page-dashboard admin-view' : 'page-dashboard'">
+    <div class="app-shell">
+        <header class="topbar">
+            <div class="brand">Community Library</div>
+            <nav class="topbar-links">
+                <a class="top-nav-item active" href="/dashboard">Overview</a>
+                <a class="top-nav-item" href="/books-page">Books</a>
+                <a class="top-nav-item" href="/borrow-page">Borrows</a>
+                <a class="top-nav-item" th:if="${isAdmin}" href="/admin/users-page">Users</a>
+                <span id="currentRoleBadge" th:text="${userRole}" th:class="'status ' + (${isAdmin} ? 'success' : 'warn')"></span>
+                <button id="themeToggle" type="button" class="btn-ui secondary theme-toggle">Theme: Auto</button>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-ui ghost">Log out</button>
+                </form>
+            </nav>
+        </header>
 
-    <div class="dashboard-hero">
-        <div class="container">
-            <h1>Welcome, <span th:text="${name}"></span>! 👋</h1>
-            <p>You are logged in as: <strong th:text="'[' + ${userRole} + ']'"></strong></p>
-            <p th:if="${isAdmin}" style="font-size: 16px; margin-top: 10px; opacity: 0.9;">
-                ✅ <strong>Admin Access Enabled</strong> - You can manage books, users, and borrow records
-            </p>
-            <p th:unless="${isAdmin}" style="font-size: 16px; margin-top: 10px; opacity: 0.9;">
-                👤 <strong>User Access</strong> - You can browse and borrow books
-            </p>
-        </div>
-    </div>
+        <main class="shell-grid">
+            <aside class="side-panel">
+                <div class="panel-title">Account</div>
+                <h2 class="account-name" th:text="${name}">User</h2>
+                <p class="account-subtitle" th:if="${isAdmin}">Admin panel access enabled for full catalog and user management.</p>
+                <p class="account-subtitle" th:unless="${isAdmin}">Manage your borrows and discover books from a single workspace.</p>
 
-    <div class="container">
-        <div class="row mb-5">
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body text-center">
-                        <div class="card-icon">📚</div>
-                        <h5 class="card-title">Browse Books</h5>
-                        <p class="card-text">Explore the collection of books available for exchange and borrow books</p>
-                        <a href="/books-page" class="btn-action">View Books →</a>
+                <div class="panel-title">Quick Links</div>
+                <div class="nav-list mb-4">
+                    <a class="nav-item active" href="/dashboard">Overview</a>
+                    <a class="nav-item" href="/books-page">Books Catalog</a>
+                    <a class="nav-item" href="/borrow-page" th:text="${isAdmin} ? 'Borrow Records' : 'My Borrows'"></a>
+                    <a class="nav-item" th:if="${isAdmin}" href="/admin/users-page">User Directory</a>
+                </div>
+
+                <div class="panel-title">Highlights</div>
+                <div class="stat-stack" th:if="${isAdmin}">
+                    <div class="stat-widget">
+                        <div class="stat-label">Total Books</div>
+                        <div class="stat-value" th:text="${totalBooks}">0</div>
+                    </div>
+                    <div class="stat-widget">
+                        <div class="stat-label">Pending Borrows</div>
+                        <div class="stat-value" th:text="${pendingBorrows}">0</div>
                     </div>
                 </div>
-            </div>
-            <div class="col-md-6 mb-4">
-                <div class="card">
-                    <div class="card-body text-center" th:if="${!isAdmin}">
-                        <div class="card-icon">⏰</div>
-                        <h5 class="card-title">My Borrows</h5>
-                        <p class="card-text">Track your borrowed books and manage your exchange activity</p>
-                        <div class="stat-grid">
-                            <div class="stat-item">
-                                <div class="stat-label">My Total Borrows</div>
-                                <div class="stat-value" th:text="${myBorrowsCount}">0</div>
-                            </div>
-                        </div>
-                        <a href="/borrow-page" class="btn-action">Check Borrows →</a>
-                    </div>
-
-                    <div class="card-body text-center" th:if="${isAdmin}">
-                        <div class="card-icon">📊</div>
-                        <h5 class="card-title">Borrow Status Overview</h5>
-                        <p class="card-text">Live stock and borrowing status of books in the platform</p>
-                        <div class="stat-grid">
-                            <div class="stat-item">
-                                <div class="stat-label">Total Books</div>
-                                <div class="stat-value" th:text="${totalBooks}">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Available</div>
-                                <div class="stat-value" th:text="${availableBooks}">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Reserved</div>
-                                <div class="stat-value" th:text="${reservedBooks}">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Sold</div>
-                                <div class="stat-value" th:text="${soldBooks}">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Pending Borrows</div>
-                                <div class="stat-value" th:text="${pendingBorrows}">0</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-label">Completed Borrows</div>
-                                <div class="stat-value" th:text="${completedBorrows}">0</div>
-                            </div>
-                        </div>
-                        <a href="/borrow-page" class="btn-action">View Borrow Records →</a>
+                <div class="stat-stack" th:unless="${isAdmin}">
+                    <div class="stat-widget">
+                        <div class="stat-label">My Borrows</div>
+                        <div class="stat-value" th:text="${myBorrowsCount}">0</div>
                     </div>
                 </div>
-            </div>
-        </div>
+            </aside>
+
+            <section class="content-panel">
+                <article class="ui-card">
+                    <span class="badge-pill" th:text="${isAdmin} ? 'Admin Mode' : 'User Mode'"></span>
+                    <h1 class="hero-title" th:if="${isAdmin}">Manage platform activity from one clean control surface.</h1>
+                    <h1 class="hero-title" th:unless="${isAdmin}">Find, borrow, and track books from your account dashboard.</h1>
+                    <p class="hero-text" th:if="${isAdmin}">
+                        Review live inventory, pending borrow flow, and user activity with a minimal and readable operations view.
+                    </p>
+                    <p class="hero-text" th:unless="${isAdmin}">
+                        Browse available books, follow your borrowing status, and keep your reading queue organized.
+                    </p>
+                    <div class="inline-actions mt-4">
+                        <a href="/books-page" class="btn-ui primary">Open Books</a>
+                        <a href="/borrow-page" class="btn-ui secondary" th:text="${isAdmin} ? 'View Borrow Records' : 'View My Borrows'"></a>
+                    </div>
+                </article>
+
+                <div class="card-grid cols-3" th:if="${isAdmin}">
+                    <article class="ui-card compact">
+                        <div class="stat-label">Available</div>
+                        <div class="stat-value" th:text="${availableBooks}">0</div>
+                    </article>
+                    <article class="ui-card compact">
+                        <div class="stat-label">Reserved</div>
+                        <div class="stat-value" th:text="${reservedBooks}">0</div>
+                    </article>
+                    <article class="ui-card compact">
+                        <div class="stat-label">Sold</div>
+                        <div class="stat-value" th:text="${soldBooks}">0</div>
+                    </article>
+                    <article class="ui-card compact">
+                        <div class="stat-label">Pending Borrows</div>
+                        <div class="stat-value" th:text="${pendingBorrows}">0</div>
+                    </article>
+                    <article class="ui-card compact">
+                        <div class="stat-label">Completed Borrows</div>
+                        <div class="stat-value" th:text="${completedBorrows}">0</div>
+                    </article>
+                    <article class="ui-card compact">
+                        <div class="stat-label">Total Books</div>
+                        <div class="stat-value" th:text="${totalBooks}">0</div>
+                    </article>
+                </div>
+
+                <div class="card-grid" th:unless="${isAdmin}">
+                    <article class="ui-card compact">
+                        <div class="stat-label">My Total Borrows</div>
+                        <div class="stat-value" th:text="${myBorrowsCount}">0</div>
+                    </article>
+                </div>
+            </section>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/app-ui.js}"></script>
+    <script>
+        AppUI.init({ roleBadgeId: 'currentRoleBadge', themeToggleId: 'themeToggle' });
+    </script>
 </body>
 </html>

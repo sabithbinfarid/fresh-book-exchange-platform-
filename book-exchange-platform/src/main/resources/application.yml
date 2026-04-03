@@ -2,9 +2,9 @@ spring:
   application:
     name: book-exchange-platform
   datasource:
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/book_exchange_db}
-    username: ${SPRING_DATASOURCE_USERNAME:book_exchange_user}
-    password: ${SPRING_DATASOURCE_PASSWORD:change_me_securely}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/bookexchange}
+    username: ${SPRING_DATASOURCE_USERNAME:postgres}
+    password: ${SPRING_DATASOURCE_PASSWORD:postgres}
   jpa:
     hibernate:
       ddl-auto: update

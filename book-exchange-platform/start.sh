@@ -1,12 +1,14 @@
 #!/bin/bash
 
-# Book Exchange Platform - Docker Compose Startup Script
+# Community Library Platform - Docker Compose Startup Script
 # This script starts all services for the application
-#changing this file for pull request test and workflow test
 set -e
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+cd "$SCRIPT_DIR"
+
 echo "================================"
-echo "Book Exchange Platform"
+echo "Community Library Platform"
 echo "Docker Compose Setup"
 echo "================================"
 #need to check if docker and docker compose are installed before running the command
@@ -32,7 +34,7 @@ fi
 echo ""
 echo "Starting services..."
 echo "Building Docker image (this may take a few minutes on first run)..."
-docker compose up --build
+docker compose -f "$SCRIPT_DIR/docker-compose.yml" --env-file "$SCRIPT_DIR/.env" up --build
 
 echo ""
 echo "================================"
