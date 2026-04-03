@@ -45,6 +45,13 @@ public class OrderRestController {
         return orderService.updateStatus(id, status);
     }
 
+    @PostMapping("/{id}/return")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
+    public ResponseEntity<Void> returnBorrow(@PathVariable Long id, Authentication authentication) {
+        orderService.returnBorrow(id, authentication.getName());
+        return ResponseEntity.noContent().build();
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

@@ -14,5 +14,6 @@ public interface OrderService {
     List<Long> findActiveBorrowedBookIdsByUser(Long userId);
     OrderResponse findById(Long id);
     OrderResponse updateStatus(Long id, OrderStatus status);
+    void returnBorrow(Long id, String requesterEmail);
     void delete(Long id);
 }

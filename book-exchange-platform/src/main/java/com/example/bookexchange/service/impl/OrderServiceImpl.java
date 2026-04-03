@@ -125,6 +125,29 @@ public class OrderServiceImpl implements OrderService {
         return mapToResponse(orderRepository.save(order));
     }
 
+    @Override
+    public void returnBorrow(Long id, String requesterEmail) {
+        User requester = userRepository.findByEmail(requesterEmail)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found with email " + requesterEmail));
+
+        BookOrder order = orderRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Order not found with id " + id));
+
+        boolean isAdmin = requester.getRoles().stream().anyMatch(role -> role.getName() == RoleName.ADMIN);
+        if (!isAdmin && !order.getBuyer().getId().equals(requester.getId())) {
+            throw new BadRequestException("You can return only your own borrow");
+        }
+
+        if (!ACTIVE_BORROW_STATUSES.contains(order.getStatus())) {
+            throw new BadRequestException("Only active borrows can be returned");
+        }
+
+        Book book = order.getBook();
+        book.setStatus(BookStatus.AVAILABLE);
+        bookRepository.save(book);
+        orderRepository.delete(order);
+    }
+
 
     @Override
     public void delete(Long id) {

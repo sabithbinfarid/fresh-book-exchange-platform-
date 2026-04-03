@@ -1,12 +1,14 @@
 @echo off
-REM Book Exchange Platform - Docker Compose Startup Script (Windows)
+REM Community Library Platform - Docker Compose Startup Script (Windows)
 REM This script starts all services for the application
 
 setlocal enabledelayedexpansion
+set "SCRIPT_DIR=%~dp0"
+cd /d "%SCRIPT_DIR%"
 
 echo.
 echo ================================
-echo Book Exchange Platform
+echo Community Library Platform
 
 echo Docker Compose Setup
 echo ================================
@@ -32,7 +34,7 @@ echo Starting services...
 echo Building Docker image (this may take a few minutes on first run)...
 echo.
 
-docker compose up --build
+docker compose -f "%SCRIPT_DIR%docker-compose.yml" --env-file "%SCRIPT_DIR%.env" up --build
 
 echo.
 echo ================================

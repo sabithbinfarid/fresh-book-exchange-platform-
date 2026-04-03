@@ -98,4 +98,25 @@ class OrderServiceImplTest {
         when(orderRepository.findById(10L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> orderService.updateStatus(10L, OrderStatus.APPROVED));
     }
+
+    @Test void returnBorrow_shouldSetBookAvailableAndDeleteOrder() {
+        BookOrder order = BookOrder.builder().id(1L).book(book).buyer(buyer).status(OrderStatus.APPROVED).orderedAt(java.time.LocalDateTime.now()).build();
+        when(userRepository.findByEmail("user@example.com")).thenReturn(Optional.of(buyer));
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+        orderService.returnBorrow(1L, "user@example.com");
+
+        assertEquals(BookStatus.AVAILABLE, book.getStatus());
+        verify(bookRepository).save(book);
+        verify(orderRepository).delete(order);
+    }
+
+    @Test void returnBorrow_shouldRejectWhenRequesterIsNotOwner() {
+        User otherUser = User.builder().id(99L).fullName("Other").roles(java.util.Set.of(new Role(RoleName.USER))).build();
+        BookOrder order = BookOrder.builder().id(1L).book(book).buyer(buyer).status(OrderStatus.PENDING).orderedAt(java.time.LocalDateTime.now()).build();
+        when(userRepository.findByEmail("other@example.com")).thenReturn(Optional.of(otherUser));
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order));
+
+        assertThrows(BadRequestException.class, () -> orderService.returnBorrow(1L, "other@example.com"));
+    }
 }

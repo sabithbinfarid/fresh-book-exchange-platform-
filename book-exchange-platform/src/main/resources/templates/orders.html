@@ -3,397 +3,194 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My Borrows - Book Exchange Platform</title>
+    <title th:text="${isAdmin} ? 'Borrow Records - Community Library Platform' : 'My Borrows - Community Library Platform'">Borrows - Community Library Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        :root {
-            --dark-bg: #0f0f0f;
-            --dark-card: #1a1a1a;
-            --dark-text: #f0f0f0;
-            --light-text: #b0b0b0;
-        }
-        body {
-            background-color: var(--dark-bg);
-            color: var(--dark-text);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        .navbar {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
-            border-bottom: 2px solid rgba(255,255,255,0.1);
-        }
-        .navbar-brand {
-            font-size: 24px;
-            font-weight: 700;
-            color: white !important;
-        }
-        .nav-link {
-            margin: 0 10px;
-            font-weight: 500;
-            transition: all 0.3s;
-            color: rgba(255,255,255,0.9) !important;
-        }
-        .nav-link:hover {
-            color: #ffc107 !important;
-        }
-        .role-badge {
-            display: inline-block;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            margin: 0 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .role-badge.admin {
-            background: rgba(34, 197, 94, 0.3);
-            color: #86efac;
-            border: 1px solid rgba(34, 197, 94, 0.5);
-        }
-        .role-badge.user {
-            background: rgba(59, 130, 246, 0.3);
-            color: #93c5fd;
-            border: 1px solid rgba(59, 130, 246, 0.5);
-        }
-        .navbar-toggler {
-            border-color: rgba(255,255,255,0.5);
-        }
-        .navbar-toggler-icon {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-        }
-        .page-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 50px 20px;
-            margin-bottom: 50px;
-            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.3);
-        }
-        .page-header h1 {
-            font-size: 36px;
-            font-weight: 700;
-            margin: 0;
-        }
-        .order-card {
-            background-color: var(--dark-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            transition: all 0.3s;
-            margin-bottom: 25px;
-            border-left: 4px solid #667eea;
-        }
-        .order-card:hover {
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.2);
-            transform: translateY(-4px);
-            border-left-color: #764ba2;
-        }
-        .order-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .order-id {
-            font-size: 14px;
-            color: var(--light-text);
-            font-weight: 600;
-        }
-        .order-status {
-            display: inline-block;
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .status-pending {
-            background: rgba(249, 115, 22, 0.2);
-            color: #fed7aa;
-        }
-        .status-confirmed {
-            background: rgba(59, 130, 246, 0.2);
-            color: #93c5fd;
-        }
-        .status-completed {
-            background: rgba(34, 197, 94, 0.2);
-            color: #86efac;
-        }
-        .status-cancelled {
-            background: rgba(239, 68, 68, 0.2);
-            color: #fca5a5;
-        }
-        .order-info {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            margin: 20px 0;
-        }
-        .info-item {
-            padding: 15px;
-            background: rgba(102, 126, 234, 0.1);
-            border: 1px solid rgba(102, 126, 234, 0.2);
-            border-radius: 8px;
-        }
-        .info-label {
-            font-size: 12px;
-            color: var(--light-text);
-            font-weight: 600;
-            text-transform: uppercase;
-            margin-bottom: 8px;
-            letter-spacing: 0.5px;
-        }
-        .info-value {
-            font-size: 16px;
-            font-weight: 600;
-            color: white;
-            word-break: break-word;
-        }
-        .no-orders {
-            text-align: center;
-            padding: 80px 20px;
-            color: var(--light-text);
-        }
-        .no-orders-icon {
-            font-size: 80px;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-        .no-orders h4 {
-            font-size: 24px;
-            margin-bottom: 10px;
-            color: white;
-        }
-        .btn-dashboard {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 8px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s;
-            display: inline-block;
-            margin-top: 20px;
-        }
-        .btn-dashboard:hover {
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
-        }
-        .order-notes {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
-        .order-notes strong {
-            color: #667eea;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .notes-item {
-            padding: 12px;
-            background: rgba(102, 126, 234, 0.08);
-            border-left: 3px solid #667eea;
-            border-radius: 4px;
-            font-size: 14px;
-            color: var(--dark-text);
-            line-height: 1.6;
-        }
-        .summary-card {
-            background-color: var(--dark-card);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.5);
-            position: sticky;
-            top: 20px;
-        }
-        .summary-title {
-            color: #667eea;
-            font-weight: 700;
-            margin-bottom: 25px;
-            font-size: 18px;
-        }
-        .summary-stat {
-            margin-bottom: 25px;
-        }
-        .summary-value {
-            font-size: 36px;
-            font-weight: 700;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .summary-label {
-            font-size: 12px;
-            color: var(--light-text);
-            margin-bottom: 8px;
-        }
-        .status-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-            color: var(--light-text);
-            font-size: 14px;
-        }
-        .status-row:last-child {
-            border-bottom: none;
-        }
-        .status-row span:last-child {
-            font-weight: 600;
-            color: white;
-        }
-        .container {
-            max-width: 1200px;
-        }
-    </style>
+    <link th:href="@{/css/app-theme.css}" rel="stylesheet">
 </head>
-<body>
-    <nav class="navbar navbar-expand-lg navbar-dark">
-        <div class="container">
-            <a class="navbar-brand" href="/dashboard">📚 Book Exchange</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="/dashboard">🏠 Dashboard</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/books-page">📖 Books</a>
-                    </li>
-                    <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                        <a class="nav-link" href="/admin/users-page">👥 Users</a>
-                    </li>
-                    <li class="nav-item">
-                        <span id="currentRoleBadge" class="role-badge user">USER</span>
-                    </li>
-                    <li class="nav-item">
-                        <form th:action="@{/logout}" method="post" class="d-inline">
-                            <button type="submit" class="nav-link btn btn-link" style="color: rgba(255,255,255,0.9);">🚪 Logout</button>
-                        </form>
-                    </li>
-                </ul>
-            </div>
-        </div>
-    </nav>
+<body th:class="${isAdmin} ? 'page-orders admin-view' : 'page-orders'">
+    <div class="app-shell">
+        <header class="topbar">
+            <div class="brand">Community Library</div>
+            <nav class="topbar-links">
+                <a class="top-nav-item" href="/dashboard">Overview</a>
+                <a class="top-nav-item" href="/books-page">Books</a>
+                <a class="top-nav-item active" href="/borrow-page">Borrows</a>
+                <a class="top-nav-item" sec:authorize="hasRole('ADMIN')" href="/admin/users-page">Users</a>
+                <span id="currentRoleBadge" class="status warn">USER</span>
+                <button id="themeToggle" type="button" class="btn-ui secondary theme-toggle">Theme: Auto</button>
+                <form th:action="@{/logout}" method="post" class="d-inline">
+                    <button type="submit" class="btn-ui ghost">Log out</button>
+                </form>
+            </nav>
+        </header>
 
-    <div class="page-header">
-        <div class="container">
-            <h1>📚 My Borrowed Books</h1>
-        </div>
-    </div>
+        <main class="shell-grid">
+            <aside class="side-panel">
+                <div class="panel-title">Borrow Center</div>
+                <h2 class="account-name" th:text="${isAdmin} ? 'Borrow Records' : 'My Borrows'">My Borrows</h2>
+                <p class="account-subtitle" th:if="${isAdmin}">Review all borrower activity and monitor status transitions.</p>
+                <p class="account-subtitle" th:unless="${isAdmin}">Track requests and status changes with a compact timeline view.</p>
 
-    <div class="container pb-5">
-        <div th:if="${borrows.isEmpty()}" class="no-orders">
-            <div class="no-orders-icon">📦</div>
-            <h4>No Borrows Yet</h4>
-            <p>You haven't borrowed any books yet. Start browsing books now!</p>
-            <a href="/books-page" class="btn-dashboard">Browse Books →</a>
-        </div>
+                <div class="panel-title">Navigation</div>
+                <div class="nav-list mb-4">
+                    <a class="nav-item" href="/dashboard">Overview</a>
+                    <a class="nav-item" href="/books-page">Books Catalog</a>
+                    <a class="nav-item active" href="/borrow-page" th:text="${isAdmin} ? 'Borrow Records' : 'My Borrows'">My Borrows</a>
+                    <a class="nav-item" th:if="${isAdmin}" href="/admin/users-page">User Directory</a>
+                </div>
 
-        <div th:unless="${borrows.isEmpty()}" class="row">
-            <div class="col-lg-8">
-                <div th:each="order : ${borrows}" class="order-card">
-                    <div class="card-body p-4">
-                        <div class="order-header">
+                <div class="panel-title">Summary</div>
+                <div class="stat-stack">
+                    <div class="stat-widget">
+                        <div class="stat-label">Total Borrows</div>
+                        <div class="stat-value" th:text="${borrows.size()}">0</div>
+                    </div>
+                    <div class="stat-widget">
+                        <div class="stat-label">Pending</div>
+                        <div class="stat-value" th:text="${borrows.?[status.name() == 'PENDING'].size()}">0</div>
+                    </div>
+                    <div class="stat-widget">
+                        <div class="stat-label">Approved</div>
+                        <div class="stat-value" th:text="${borrows.?[status.name() == 'APPROVED'].size()}">0</div>
+                    </div>
+                </div>
+            </aside>
+
+            <section class="content-panel">
+                <article class="ui-card compact">
+                    <div class="section-head">
+                        <div>
+                            <h1 class="section-title" th:text="${isAdmin} ? 'Borrow Ledger' : 'Borrowed Books'">Borrowed Books</h1>
+                            <p class="muted mb-0" th:if="${isAdmin}">A complete view of all borrow requests, statuses, and timeline activity.</p>
+                            <p class="muted mb-0" th:unless="${isAdmin}">Everything you borrowed, organized by status and timestamp.</p>
+                        </div>
+                        <div class="search-row">
+                            <input id="borrowsSearch" type="search" class="input-ui search-field" placeholder="Search by title, borrower, status, or ID">
+                            <a href="/books-page" class="btn-ui secondary">Browse Books</a>
+                        </div>
+                    </div>
+                </article>
+
+                <div th:if="${borrows.isEmpty()}" class="ui-card text-center">
+                    <h4>No Borrows Yet</h4>
+                    <p class="muted">You have not borrowed any books yet.</p>
+                    <a href="/books-page" class="btn-ui primary">Browse Books</a>
+                </div>
+
+                <div th:unless="${borrows.isEmpty()}" class="card-grid">
+                    <article th:each="order : ${borrows}" class="ui-card compact fade-in searchable-borrow"
+                             th:attr="data-search=${order.id + ' ' + order.bookTitle + ' ' + order.buyerName + ' ' + order.status}">
+                        <div class="section-head">
                             <div>
-                                <div class="order-id">📦 Borrow #<span th:text="${order.id}"></span></div>
+                                <div class="stat-label">Borrow ID</div>
+                                <h5 class="mb-0">#<span th:text="${order.id}"></span></h5>
                             </div>
-                            <span class="order-status"
-                                  th:classappend="${order.status.name() == 'PENDING'} ? ' status-pending' :
-                                                  (${order.status.name() == 'APPROVED'} ? ' status-confirmed' :
-                                                  (${order.status.name() == 'COMPLETED'} ? ' status-completed' :
-                                                  (${order.status.name() == 'CANCELLED'} ? ' status-cancelled' : '')))"
+                            <span class="status"
+                                  th:classappend="${order.status.name() == 'PENDING'} ? ' warn' :
+                                                  (${order.status.name() == 'APPROVED'} ? ' success' :
+                                                  (${order.status.name() == 'COMPLETED'} ? ' success' : ' danger'))"
                                   th:text="${order.status}">
                             </span>
                         </div>
 
-                        <div class="order-info">
-                            <div class="info-item">
-                                <div class="info-label">📚 Book Title</div>
-                                <div class="info-value" th:text="${order.bookTitle}"></div>
+                        <div class="card-grid cols-3">
+                            <div class="stat-widget">
+                                <div class="stat-label">Book Title</div>
+                                <div th:text="${order.bookTitle}"></div>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label">👤 Buyer</div>
-                                <div class="info-value" th:text="${order.buyerName}"></div>
+                            <div class="stat-widget">
+                                <div class="stat-label">Borrower</div>
+                                <div th:text="${order.buyerName}"></div>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label">🆔 Book ID</div>
-                                <div class="info-value" th:text="${order.bookId}"></div>
+                            <div class="stat-widget">
+                                <div class="stat-label">Book ID</div>
+                                <div th:text="${order.bookId}"></div>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label">📅 Date</div>
-                                <div class="info-value" th:text="${#temporals.format(order.orderedAt, 'MMM dd, yyyy')}"></div>
+                            <div class="stat-widget">
+                                <div class="stat-label">Date</div>
+                                <div th:text="${#temporals.format(order.orderedAt, 'MMM dd, yyyy')}"></div>
                             </div>
-                            <div class="info-item">
-                                <div class="info-label">⏱️ Time</div>
-                                <div class="info-value" th:text="${#temporals.format(order.orderedAt, 'HH:mm')}"></div>
+                            <div class="stat-widget">
+                                <div class="stat-label">Time</div>
+                                <div th:text="${#temporals.format(order.orderedAt, 'HH:mm')}"></div>
                             </div>
                         </div>
-                    </div>
+
+                        <div class="inline-actions mt-3"
+                             th:if="${order.status.name() == 'PENDING' or order.status.name() == 'APPROVED'}">
+                            <button class="btn-ui secondary"
+                                    th:onclick="|returnBorrow(${order.id}, this)|">
+                                Return Book
+                            </button>
+                        </div>
+                    </article>
                 </div>
-            </div>
 
-            <div class="col-lg-4">
-                <div class="summary-card p-4">
-                    <h5 class="summary-title">📊 Borrow Summary</h5>
-                    
-                    <div class="summary-stat">
-                        <div class="summary-label">Total Borrows</div>
-                        <div class="summary-value" th:text="${borrows.size()}"></div>
-                    </div>
-
-                    <div style="border-top: 1px solid rgba(255,255,255,0.1); padding: 20px 0;">
-                        <div class="status-row">
-                            <span>🟡 Pending</span>
-                            <span th:text="${borrows.?[status.name() == 'PENDING'].size()}"></span>
-                        </div>
-                        <div class="status-row">
-                            <span>🔵 Approved</span>
-                            <span th:text="${borrows.?[status.name() == 'APPROVED'].size()}"></span>
-                        </div>
-                        <div class="status-row">
-                            <span>✅ Completed</span>
-                            <span th:text="${borrows.?[status.name() == 'COMPLETED'].size()}"></span>
-                        </div>
-                    </div>
-
-                    <a href="/books-page" class="btn btn-primary w-100" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: none; border-radius: 8px; padding: 12px; font-weight: 600; margin-top: 25px;">
-                        Browse More Books →
-                    </a>
+                <div id="borrowsSearchEmpty" class="ui-card text-center empty-search-state">
+                    <h4>No Matches Found</h4>
+                    <p class="muted mb-0">Try a different borrow ID, title, borrower, or status.</p>
                 </div>
-            </div>
-        </div>
+            </section>
+        </main>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/js/app-ui.js}"></script>
     <script>
-        function loadRoleBadge() {
-            fetch('/api/auth/me')
-                .then(r => r.ok ? r.json() : Promise.reject())
-                .then(data => {
-                    const badge = document.getElementById('currentRoleBadge');
-                    if (!badge) return;
-                    badge.textContent = data.isAdmin ? 'ADMIN' : 'USER';
-                    badge.classList.remove('admin', 'user');
-                    badge.classList.add(data.isAdmin ? 'admin' : 'user');
-                })
-                .catch(() => {
-                    // Keep default badge if profile endpoint is unavailable.
-                });
-        }
+        const API_BORROWS = '/api/borrows';
 
-        loadRoleBadge();
+        AppUI.init({
+            roleBadgeId: 'currentRoleBadge',
+            themeToggleId: 'themeToggle',
+            search: {
+                inputId: 'borrowsSearch',
+                itemSelector: '.searchable-borrow',
+                scopeSelector: '.content-panel',
+                emptyStateId: 'borrowsSearchEmpty'
+            }
+        });
+
+        function returnBorrow(orderId, buttonEl) {
+            if (!confirm('Return this book and make it available in the catalog again?')) {
+                return;
+            }
+
+            if (buttonEl) {
+                buttonEl.disabled = true;
+                buttonEl.textContent = 'Returning...';
+            }
+
+            fetch(`${API_BORROWS}/${orderId}/return`, {
+                method: 'POST'
+            })
+            .then(async response => {
+                if (response.ok) {
+                    location.reload();
+                    return;
+                }
+
+                let message = 'Failed to return the book';
+                try {
+                    const errorData = await response.json();
+                    if (errorData && errorData.message) {
+                        message = errorData.message;
+                    }
+                } catch (_) {
+                    // Keep default message when response body is not JSON.
+                }
+                throw new Error(message);
+            })
+            .catch(error => {
+                if (buttonEl) {
+                    buttonEl.disabled = false;
+                    buttonEl.textContent = 'Return Book';
+                }
+                alert(error.message || 'Error while returning book');
+            });
+        }
     </script>
 </body>
 </html>

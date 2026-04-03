@@ -1,6 +1,6 @@
 # Docker Setup Guide
 
-This guide explains how to build and run the Book Exchange Platform using Docker.
+This guide explains how to build and run the Community Library Platform using Docker.
 
 ## Prerequisites
 - Docker Desktop installed (or Docker Engine on Linux, Mac)
