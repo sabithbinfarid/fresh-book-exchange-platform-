@@ -54,18 +54,19 @@ class OrderServiceImplTest {
     }
 
     @Test void create_shouldThrowWhenBookMissing() {
+        when(userRepository.findById(2L)).thenReturn(Optional.of(buyer));
         when(bookRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> orderService.create(request));
     }
 
     @Test void create_shouldThrowWhenBookUnavailable() {
         book.setStatus(BookStatus.SOLD);
+        when(userRepository.findById(2L)).thenReturn(Optional.of(buyer));
         when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         assertThrows(BadRequestException.class, () -> orderService.create(request));
     }
 
     @Test void create_shouldThrowWhenBuyerMissing() {
-        when(bookRepository.findById(1L)).thenReturn(Optional.of(book));
         when(userRepository.findById(2L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class, () -> orderService.create(request));
     }
@@ -80,7 +81,7 @@ class OrderServiceImplTest {
 
     @Test void findAll_shouldReturnOrders() {
         BookOrder order = BookOrder.builder().id(1L).book(book).buyer(buyer).status(OrderStatus.PENDING).orderedAt(java.time.LocalDateTime.now()).build();
-        when(orderRepository.findAll()).thenReturn(List.of(order));
+        when(orderRepository.findAllByOrderByOrderedAtDesc()).thenReturn(List.of(order));
         assertEquals(1, orderService.findAll().size());
     }
 
