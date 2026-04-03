@@ -1,7 +1,9 @@
 FROM maven:3.9-eclipse-temurin-21 AS builder
 WORKDIR /app
-COPY /book-exchange-platform/pom.xml .
-COPY /book-exchange-platform/src /book-exchange-platform/src
+
+# Copy from the current build context (Render uses repo/project root as context)
+COPY pom.xml .
+COPY src ./src
 RUN mvn clean package -DskipTests
 
 FROM eclipse-temurin:21-jre
