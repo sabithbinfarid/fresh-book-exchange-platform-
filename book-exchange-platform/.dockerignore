@@ -1,0 +1,14 @@
+target/
+.git/
+.github/
+.idea/
+.vscode/
+*.log
+*.iml
+docker-compose*.yml
+README.md
+DOCKER_SETUP.md
+PROJECT_COMPLIANCE_CHECKLIST.md
+SETUP_VERIFICATION_REPORT.md
+start.sh
+start.cmd

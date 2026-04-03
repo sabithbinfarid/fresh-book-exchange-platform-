@@ -12,7 +12,7 @@ Book Exchange Platform with three roles:
 
 ## Tech Stack
 - Spring Boot 3.5.11
-- Java 17
+- Java 21
 - Thymeleaf
 - Spring Security
 - Spring Data JPA
@@ -102,7 +102,7 @@ Default seeded admin:
 ## CI/CD
 The workflow in `.github/workflows/ci-cd.yml`:
 1. checks out code
-2. sets up Java 17
+2. sets up Java 21
 3. runs `./mvnw clean verify`
 4. triggers Render deploy hook on `main`
 
@@ -116,6 +116,17 @@ Environment variables on Render:
 - `SPRING_DATASOURCE_URL`
 - `SPRING_DATASOURCE_USERNAME`
 - `SPRING_DATASOURCE_PASSWORD`
+
+Quick deploy checklist:
+1. Push code to GitHub with `Dockerfile` and `render.yaml` in root.
+2. In Render Dashboard: **New +** -> **Blueprint** -> connect repository.
+3. Confirm `book-exchange-platform` web service and `book-exchange-db` database are detected.
+4. Click **Apply** and wait for first build.
+5. Open generated Render URL and test `/login`.
+
+Notes:
+- App runs on Java 21 (already configured in `pom.xml` and Docker image).
+- Render passes the runtime `PORT` automatically; Docker entrypoint is already configured to use it.
 
 ## Testing Coverage Plan
 This starter includes:
