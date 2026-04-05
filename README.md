@@ -119,15 +119,15 @@ Fresh Book Exchange Platform is a comprehensive solution for managing peer-to-pe
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    Client Layer                               │
-│         (Web Browser, Mobile App, Third-party Clients)       │
+│                    Client Layer                             │
+│         (Web Browser, Mobile App, Third-party Clients)      │
 └────────────────────────┬────────────────────────────────────┘
                          │
          ┌───────────────┴──────────────┐
          │                              │
     ┌────▼─────┐              ┌────────▼──────┐
-    │ REST API  │              │ View Layer     │
-    │ (JSON)    │              │(Thymeleaf)    │
+    │ REST API │              │ View Layer    │
+    │ (JSON)   │              │(Thymeleaf)    │
     └────┬─────┘              └────────┬──────┘
          │                              │
     ┌────▼──────────────────────────────▼──────┐
@@ -138,25 +138,27 @@ Fresh Book Exchange Platform is a comprehensive solution for managing peer-to-pe
     │      Service Layer (Business Logic)      │
     │ ┌──────────────────────────────────────┐ │
     │ │ BookService  │ OrderService          │ │
-    │ │ UserService  │ NotificationService  │ │
+    │ │ UserService  │ NotificationService  │  │
     └─┼──────────────────────────────────────┼─┘
       │                                      │
     ┌─┴──────────────────────────────────────┴─┐
-    │    Repository Layer (Data Access)         │
-    │  ┌─────────────┐  ┌──────────────────┐  │
-    │  │BookRepository│ │OrderRepository   │  │
-    │  │UserRepository│ │RoleRepository    │  │
+    │    Repository Layer (Data Access)        │
+    │  ┌─────────────┐  ┌──────────────────┐   │
+    │  │BookRepository│ │OrderRepository   │   │
+    │  │UserRepository│ │RoleRepository    │   │
     └──┼─────────────┼──┼──────────────────┼──┘
        │             │  │                  │
     ┌──▼─────────────▼──▼──────────────────▼──┐
-    │     PostgreSQL/MySQL Database            │
-    │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐   │
-    │  │Users │ │Books │ │Orders│ │Roles │   │
+    │     PostgreSQL/MySQL Database           │
+    │  ┌──────┐ ┌──────┐ ┌──────┐ ┌──────┐    │
+    │  │Users │ │Books │ │Orders│ │Roles │    │
     └──┴──────┴─┴──────┴─┴──────┴─┴──────┴───┘
 ```
 
 ---
+![Architecture Diagram](./diagram/arch.jpg)
 
+![ER Diagram](./diagram/er.jpg)
 ## 🚀 Quick Start
 
 ### Prerequisites
@@ -811,7 +813,7 @@ in the Software without restriction...
 
 ---
 
-## 📞 Support & Contact
+##  Support & Contact
 
 - **Issues**: [GitHub Issues](https://github.com/sabithbinfarid/fresh-book-exchange-platform/issues)
 - **Email**: support@bookexchangeplatform.com
@@ -820,7 +822,7 @@ in the Software without restriction...
 
 ---
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - Spring Boot documentation and community
 - PostgreSQL for reliable database
@@ -831,7 +833,7 @@ in the Software without restriction...
 
 <div align="center">
 
-**Made with ❤️ for the book exchange community**
+
 
 [⬆ Back to Top](#-fresh-book-exchange-platform)
 
